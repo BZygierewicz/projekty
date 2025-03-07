@@ -6,7 +6,6 @@ model.load_state_dict(torch.load("better_model.pth", map_location=device))  # Wc
 model.to(device)
 model.eval()
 
-
 if __name__ == '__main__':
     root = tk.Tk()
     app = DigitRecognizerApp(root)
