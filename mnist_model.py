@@ -3,11 +3,11 @@ import torch.nn as nn
 import torch.optim as optim
 import torchvision
 import torchvision.transforms as transforms
-from torch.xpu import device
+
 
 # ======= Ustawienia urządzenia =======
-#device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-device = torch.device("mps")
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
 print(f"Model pracuje na urządzeniu: {device}")
 
 # ======= Transformacje danych =======

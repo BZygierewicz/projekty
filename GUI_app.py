@@ -1,6 +1,5 @@
 import tkinter as tk
 from mnist_model import *
-from numpy import ndarray
 from torchvision.transforms import functional as F
 from tkinter import Canvas
 from PIL import Image, ImageDraw
