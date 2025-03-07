@@ -31,21 +31,31 @@ class NeuralNetwork(nn.Module):
     def __init__(self):
         super(NeuralNetwork, self).__init__()
         self.flatten = nn.Flatten() # spłaszczenie obrazu
-        self.fc1 = nn.Linear(784, 128) #28x28 = 784
+        self.fc1 = nn.Linear(784, 256) #28x28 = 784
         self.relu = nn.ReLU()
-        self.fc2 = nn.Linear(128, 10) # warstwa wyjściowa (10 klas)
+        self.dropout = nn.Dropout(0.2)
+        self.dropout2 = nn.Dropout(0.1)
+        self.fc2 = nn.Linear(256, 64)
+        self.fc3 = nn.Linear(64, 16)
+        self.fc4 = nn.Linear(16, 10) # warstwa wyjściowa (10 klas)
     # nadpisanie metody forward
     def forward(self, x: torch.Tensor):
         x = self.flatten(x)
         x = self.fc1(x)
         x = self.relu(x)
+        x = self.dropout(x)
         x = self.fc2(x)
+        x = self.relu(x)
+        #x = self.dropout2(x)
+        x = self.fc3(x)
+        x = self.relu(x)
+        x = self.fc4(x)
         return x
 
 # ======= Funkcja treningowa =======
 def train_model(model, num_epochs=5):
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    optimizer = optim.AdamW(model.parameters(), lr=0.001)
 
     model.to(device)
     model.train()
@@ -80,7 +90,7 @@ def evaluate_model(model):
     accuracy = 100 * correct / total
     print(f"Dokładność na zbiorze testowym: {accuracy:.2f}%")
 model = NeuralNetwork()
-#train_model(model, 25)
-#evaluate_model(model)
+train_model(model, 50)
+evaluate_model(model)
 # zapisanie przetrenowanego modelu do pliku
-#torch.save(model.state_dict(), "better_model.pth")
+torch.save(model.state_dict(), "better_model.pth")
