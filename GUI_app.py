@@ -3,7 +3,6 @@ from mnist_model import *
 from torchvision.transforms import functional as F
 from tkinter import Canvas
 from PIL import Image, ImageDraw
-import numpy as np
 
 class DigitRecognizerApp:
     def __init__(self, root):
