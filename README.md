@@ -1,0 +1,1 @@
+Mój pierwszy projekt MNIST
