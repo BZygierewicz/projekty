@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 import torchvision
 import torchvision.transforms as transforms
-
+from torch.functional import F
 
 # ======= Ustawienia urządzenia =======
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -25,8 +25,26 @@ test_dataset = torchvision.datasets.MNIST(root='./data', train=False, transform=
 
 train_loader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=64, shuffle=True)
 test_loader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=64, shuffle=False)
+# ======= Definicja modelu Conv2D =======
+class ConvNet(nn.Module):
+    def __init__(self):
+        super(ConvNet, self).__init__()
+        self.conv1 = nn.Conv2d(1, 10, kernel_size=5)
+        self.pool = nn.MaxPool2d(2, 2)
+        self.conv2 = nn.Conv2d(10, 10, kernel_size=5)
+        self.fc1 = nn.Linear(in_features=160, out_features=10)
+        self.flatten = nn.Flatten()
+    def forward(self, x: torch.Tensor):
+        x = F.relu(self.conv1(x))
+        x = self.pool(x)
+        x = F.relu(self.conv2(x))
+        x = self.pool(x)
+        x = self.flatten(x)
+        x = self.fc1(x)
+        return x
 
-# ======= Definicja modelu =======
+
+# ======= Definicja modelu Linear =======
 class NeuralNetwork(nn.Module):
     def __init__(self):
         super(NeuralNetwork, self).__init__()
@@ -89,8 +107,9 @@ def evaluate_model(model):
 
     accuracy = 100 * correct / total
     print(f"Dokładność na zbiorze testowym: {accuracy:.2f}%")
-model = NeuralNetwork()
+
+model = ConvNet()
 train_model(model, 50)
 evaluate_model(model)
 # zapisanie przetrenowanego modelu do pliku
-torch.save(model.state_dict(), "better_model.pth")
+torch.save(model.state_dict(), "conv_model.pth")
