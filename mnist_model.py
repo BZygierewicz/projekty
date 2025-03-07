@@ -3,9 +3,11 @@ import torch.nn as nn
 import torch.optim as optim
 import torchvision
 import torchvision.transforms as transforms
+from torch.xpu import device
 
 # ======= Ustawienia urządzenia =======
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+#device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+device = torch.device("mps")
 print(f"Model pracuje na urządzeniu: {device}")
 
 # ======= Transformacje danych =======
@@ -78,7 +80,7 @@ def evaluate_model(model):
     accuracy = 100 * correct / total
     print(f"Dokładność na zbiorze testowym: {accuracy:.2f}%")
 model = NeuralNetwork()
-train_model(model, 15)
-evaluate_model(model)
+#train_model(model, 25)
+#evaluate_model(model)
 # zapisanie przetrenowanego modelu do pliku
-torch.save(model.state_dict(), "better_model.pth")
+#torch.save(model.state_dict(), "better_model.pth")
